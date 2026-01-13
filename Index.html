@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Quiz for Peace</title>
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Supabase JS Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.90.1/dist/umd/supabase.min.js"></script>
+  
+  <script src="questions.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  
+  <!-- Background Effects -->
+  <div class="bg-effects">
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+    <div class="gradient-orb orb-3"></div>
+  </div>
+  
+  <!-- Settings Panel -->
+  <div class="settings-panel" id="settingsPanel">
+    <div class="settings-content">
+      <button class="close-settings" id="closeSettings">×</button>
+      <h3>⚙️ Impostazioni</h3>
+      
+      <div class="setting-group">
+        <label class="setting-label">
+          <span>🌙 Tema Scuro</span>
+          <label class="toggle">
+            <input type="checkbox" id="darkModeToggle">
+            <span class="toggle-slider"></span>
+          </label>
+        </label>
+      </div>
+      
+      <div class="setting-group">
+        <label class="setting-label">
+          <span>🔊 Effetti Sonori</span>
+          <label class="toggle">
+            <input type="checkbox" id="soundToggle" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </label>
+      </div>
+      
+      <div class="setting-group">
+        <label class="setting-label">
+          <span>✨ Animazioni</span>
+          <label class="toggle">
+            <input type="checkbox" id="animationsToggle" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </label>
+      </div>
+      
+      <div class="setting-group">
+        <label for="fontSizeSelect">📏 Dimensione Testo</label>
+        <select id="fontSizeSelect" class="setting-select">
+          <option value="small">Piccolo</option>
+          <option value="medium" selected>Medio</option>
+          <option value="large">Grande</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  
+  <main class="wrap">
+    
+    <!-- Top Bar -->
+    <div class="top-bar">
+      <div class="logo-section">
+        <div class="logo-icon">🕊️</div>
+        <span class="logo-text">Quiz for Peace</span>
+      </div>
+      <div class="top-actions">
+        <button class="icon-btn" id="btnSettings" title="Impostazioni">⚙️</button>
+        <button class="icon-btn" id="btnStats" title="Statistiche">📊</button>
+        <button class="icon-btn" id="btnInfo" title="Informazioni">ℹ️</button>
+      </div>
+    </div>
+    
+    <header class="header">
+      <h1 class="main-title">
+        <span class="title-line">Quiz for</span>
+        <span class="title-line highlight">Peace</span>
+      </h1>
+      <p class="subtitle">Impara attraverso il gioco, scopri la storia</p>
+    </header>
+
+    <!-- Guide Modal -->
+    <div class="modal" id="guideModal" style="display:none;">
+      <div class="modal-content guide-modal-content">
+        <button class="close-modal" id="closeGuide">×</button>
+        <h2>📚 Guida Completa - Quiz for Peace</h2>
+        
+        <div class="guide-section">
+          <h3>💡 Che cosa fa la webapp</h3>
+          <p>Quiz for Peace è una webapp educativa che permette di imparare attraverso quiz a risposta multipla. È pensata soprattutto per studenti delle scuole medie e superiori, ma può essere utilizzata da chiunque voglia approfondire la questione israelo-palestinese e i conflitti in generale in modo chiaro e interattivo.</p>
+          <p><strong>Caratteristica unica:</strong> Quando sbagli una domanda sul conflitto israelo-palestinese, ricevi spiegazioni educative dettagliate con link a fonti affidabili per approfondire!</p>
+        </div>
+        
+        <div class="guide-section">
+          <h3>🎮 Come giocare</h3>
+          <ul>
+            <li><strong>Inserisci il tuo nome</strong> - Apparirà nella classifica se fai un buon punteggio</li>
+            <li><strong>Seleziona la difficoltà</strong> - Scegli tra Facile, Medio o Difficile</li>
+            <li><strong>Scegli le categorie</strong> - Puoi selezionare una o più categorie dalla barra laterale:
+              <ul>
+                <li>🌍 Tutte - Include tutte le domande</li>
+                <li>💻 Informatica - Domande su tecnologia e computer</li>
+                <li>🔬 Scienza - Domande scientifiche</li>
+                <li>📜 Storia - Include il conflitto israelo-palestinese</li>
+                <li>🗺️ Geografia - Luoghi e territori</li>
+              </ul>
+            </li>
+            <li><strong>Controlla il numero di domande</strong> - Nella barra laterale vedi quante domande hai selezionato</li>
+            <li><strong>Clicca "Inizia Quiz"</strong> - Il quiz parte!</li>
+            <li><strong>Rispondi alle domande</strong> - Clicca sulla risposta che ritieni corretta</li>
+            <li><strong>Attenzione:</strong> Una risposta errata termina il quiz</li>
+          </ul>
+        </div>
+        
+        <div class="guide-section">
+          <h3>📚 Sistema Educativo - "Impara di più"</h3>
+          <p><strong>Novità!</strong> Quando sbagli una domanda sul conflitto israelo-palestinese, non finisce tutto subito:</p>
+          <ul>
+            <li>📖 Appare una <strong>spiegazione dettagliata</strong> della risposta corretta</li>
+            <li>🔗 Ricevi <strong>link a fonti affidabili</strong> per approfondire (BBC, ONU, Treccani, Britannica, ecc.)</li>
+            <li>⏸️ <strong>Nessun timer</strong> - Prenditi tutto il tempo che vuoi per leggere</li>
+            <li>🌐 <strong>Apri i link</strong> in nuove schede e torna quando hai finito</li>
+            <li>✅ Clicca <strong>"Continua"</strong> quando hai finito di leggere</li>
+          </ul>
+          <p><strong>29 domande</strong> sul conflitto hanno spiegazioni complete con fonti verificate!</p>
+        </div>
+        
+        <div class="guide-section">
+          <h3>⭐ Sistema di punteggio</h3>
+          <ul>
+            <li><strong>+1 punto</strong> per ogni risposta corretta</li>
+            <li><strong>+0.5 punti bonus</strong> se rispondi in meno di 5 secondi (Bonus Velocità ⚡)</li>
+            <li><strong>Streak bonus:</strong> 3 o più risposte consecutive corrette attivano l'indicatore Streak 🔥</li>
+            <li>Il tuo punteggio finale è arrotondato e salvato nella classifica</li>
+          </ul>
+        </div>
+        
+        <div class="guide-section">
+          <h3>🏆 Classifica</h3>
+          <p>La classifica mostra i migliori risultati per ogni livello di difficoltà:</p>
+          <ul>
+            <li>🥇 <strong>Oro</strong> - Prima posizione</li>
+            <li>🥈 <strong>Argento</strong> - Seconda posizione</li>
+            <li>🥉 <strong>Bronzo</strong> - Terza posizione</li>
+            <li>Le prime 10 posizioni sono visibili per ogni difficoltà</li>
+            <li>Puoi switchare tra le classifiche con le tabs</li>
+          </ul>
+        </div>
+        
+        <div class="guide-section">
+          <h3>⚙️ Impostazioni (pulsante ⚙️ in alto)</h3>
+          <ul>
+            <li><strong>🌙 Tema Scuro</strong> - Attiva il dark mode per ridurre l'affaticamento degli occhi</li>
+            <li><strong>🔊 Effetti Sonori</strong> - Suoni per feedback immediato (click, risposta corretta/errata, streak)</li>
+            <li><strong>✨ Animazioni</strong> - Disattivale se preferisci un'esperienza più veloce</li>
+            <li><strong>📏 Dimensione Testo</strong> - Scegli tra Piccolo, Medio e Grande per la leggibilità</li>
+            <li>Tutte le impostazioni vengono salvate automaticamente</li>
+          </ul>
+        </div>
+        
+        <div class="guide-section">
+          <h3>📊 Statistiche (pulsante 📊 in alto)</h3>
+          <p>Monitora i tuoi progressi nel tempo:</p>
+          <ul>
+            <li>🎯 <strong>Partite Giocate</strong> - Quante volte hai giocato in totale</li>
+            <li>⭐ <strong>Punteggio Migliore</strong> - Il tuo record personale</li>
+            <li>📈 <strong>Media Punti</strong> - La tua media su tutte le partite</li>
+            <li>🔥 <strong>Best Streak</strong> - La tua striscia di risposte corrette più lunga</li>
+          </ul>
+        </div>
+        
+        <div class="guide-section">
+          <h3>🎯 Durante il Quiz</h3>
+          <ul>
+            <li><strong>Barra di progresso</strong> - Mostra quante domande hai completato</li>
+            <li><strong>Indicatore Streak 🔥</strong> - Appare dopo 3+ risposte consecutive corrette</li>
+            <li><strong>Punteggio in tempo reale</strong> - Vedi il tuo punteggio aggiornarsi</li>
+            <li><strong>Pulsante "Abbandona"</strong> - Puoi fermarti in qualsiasi momento</li>
+            <li><strong>Feedback visivo</strong> - Verde per risposte corrette, rosso per quelle sbagliate</li>
+          </ul>
+        </div>
+        
+        <div class="guide-section">
+          <h3>🎉 Fine Quiz</h3>
+          <p>Quando completi il quiz (o sbagli una risposta):</p>
+          <ul>
+            <li>🎊 <strong>Confetti</strong> se hai fatto un punteggio perfetto!</li>
+            <li>📊 Vedi le <strong>statistiche della partita</strong>: risposte corrette e max streak</li>
+            <li>💾 Il punteggio viene <strong>salvato automaticamente</strong> nel database</li>
+            <li>📈 Le <strong>statistiche personali</strong> vengono aggiornate</li>
+            <li>🔄 <strong>Gioca Ancora</strong> - Ricomincia con le stesse impostazioni</li>
+            <li>🏠 <strong>Torna all'Inizio</strong> - Ritorna alla schermata principale</li>
+            <li>🔗 <strong>Condividi</strong> - Condividi il tuo punteggio con gli amici</li>
+          </ul>
+        </div>
+        
+        <div class="guide-section">
+          <h3>🎨 Design e Accessibilità</h3>
+          <ul>
+            <li><strong>Sfondo arcobaleno</strong> - Simbolo di pace che rappresenta i valori dell'app</li>
+            <li><strong>Interfaccia moderna</strong> - Design pulito con effetto glassmorphism</li>
+            <li><strong>Completamente responsive</strong> - Funziona perfettamente su mobile, tablet e desktop</li>
+            <li><strong>Accessibile</strong> - Navigabile con mouse e tastiera</li>
+            <li><strong>Animazioni fluide</strong> - Esperienza visiva piacevole (disattivabili)</li>
+          </ul>
+        </div>
+        
+        <div class="guide-section">
+          <h3>📖 Fonti Educative Utilizzate</h3>
+          <p>Per le spiegazioni usiamo solo fonti affidabili e verificate:</p>
+          <ul>
+            <li>🌐 <strong>Organizzazioni Internazionali:</strong> ONU, UNESCO, UNRWA, Corte Internazionale</li>
+            <li>📰 <strong>Media Autorevoli:</strong> BBC, Al Jazeera, The Guardian, New York Times</li>
+            <li>📚 <strong>Enciclopedie:</strong> Britannica, Treccani, Focus</li>
+            <li>🏛️ <strong>Fonti Istituzionali:</strong> Ministeri degli Esteri, archivi storici</li>
+            <li>🎓 <strong>Centri di Ricerca:</strong> Council on Foreign Relations, History Channel</li>
+          </ul>
+        </div>
+        
+        <div class="guide-section">
+          <h3>💡 Consigli per Imparare Meglio</h3>
+          <ul>
+            <li>📝 <strong>Leggi con attenzione</strong> le spiegazioni quando sbagli</li>
+            <li>🔗 <strong>Apri i link</strong> alle fonti per approfondire gli argomenti</li>
+            <li>🔄 <strong>Rigioca</strong> per memorizzare meglio le informazioni</li>
+            <li>📊 <strong>Monitora le statistiche</strong> per vedere i tuoi progressi</li>
+            <li>🎯 <strong>Prova difficoltà diverse</strong> per sfidare te stesso</li>
+            <li>👥 <strong>Sfida gli amici</strong> - Imparare insieme è più divertente!</li>
+          </ul>
+        </div>
+        
+        <div class="guide-section">
+          <h3>❓ Domande Frequenti (FAQ)</h3>
+          <p><strong>Q: Perché il quiz finisce subito quando sbaglio?</strong></p>
+          <p>A: È una regola del gioco per renderlo più sfidante. Ma se sbagli una domanda sul conflitto, hai tempo di leggere le spiegazioni!</p>
+          
+          <p><strong>Q: Come posso vedere le mie statistiche?</strong></p>
+          <p>A: Clicca sul pulsante 📊 in alto a destra.</p>
+          
+          <p><strong>Q: Le impostazioni vengono salvate?</strong></p>
+          <p>A: Sì, tutte le impostazioni e statistiche vengono salvate nel tuo browser.</p>
+          
+          <p><strong>Q: Posso giocare offline?</strong></p>
+          <p>A: Serve internet per caricare la pagina e salvare i punteggi nella classifica globale.</p>
+          
+          <p><strong>Q: Quanto sono affidabili le spiegazioni?</strong></p>
+          <p>A: Usiamo solo fonti autorevoli e riconosciute internazionalmente (ONU, BBC, Treccani, ecc.).</p>
+        </div>
+        
+        <div class="guide-note">
+          <strong>💬 Supporto e Feedback</strong><br>
+          Per segnalazioni, problemi o suggerimenti, contatta il team di sviluppo:<br>
+          <strong>📧 quertystartup.info@gmail.com</strong>
+        </div>
+        
+        <div class="guide-footer">
+          <p>© QWERTY - Educational Software</p>
+          <p><strong>Nome app:</strong> QUIZ FOR PEACE</p>
+          <p><strong>Versione:</strong> 2.0 con Sistema Educativo</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Statistics Modal -->
+    <div class="modal" id="statsModal" style="display:none;">
+      <div class="modal-content">
+        <button class="close-modal" id="closeStats">×</button>
+        <h2>📊 Le Tue Statistiche</h2>
+        
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">🎯</div>
+            <div class="stat-value" id="statTotalGames">0</div>
+            <div class="stat-label">Partite</div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-icon">⭐</div>
+            <div class="stat-value" id="statBestScore">0</div>
+            <div class="stat-label">Record</div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-icon">📈</div>
+            <div class="stat-value" id="statAvgScore">0</div>
+            <div class="stat-label">Media</div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-icon">🔥</div>
+            <div class="stat-value" id="statStreak">0</div>
+            <div class="stat-label">Streak</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- START SCREEN -->
+    <section class="card" id="startScreen">
+      <div class="start-container">
+        
+        <aside class="category-sidebar">
+          <h3 class="sidebar-title">📚 Argomenti</h3>
+          <div class="category-list">
+            <button class="category-btn selected" data-category="all">
+              <span class="cat-icon">🌍</span>
+              <span class="cat-label">Tutte</span>
+            </button>
+            <button class="category-btn" data-category="informatica">
+              <span class="cat-icon">💻</span>
+              <span class="cat-label">Informatica</span>
+            </button>
+            <button class="category-btn" data-category="scienza">
+              <span class="cat-icon">🔬</span>
+              <span class="cat-label">Scienza</span>
+            </button>
+            <button class="category-btn" data-category="storia">
+              <span class="cat-icon">📜</span>
+              <span class="cat-label">Storia</span>
+            </button>
+            <button class="category-btn" data-category="geografia">
+              <span class="cat-icon">🗺️</span>
+              <span class="cat-label">Geografia</span>
+            </button>
+          </div>
+          
+          <div class="questions-summary">
+            <div class="summary-label">Domande</div>
+            <div class="summary-value" id="questionsCount">0</div>
+          </div>
+        </aside>
+
+        <div class="main-content">
+          
+          <div class="player-section">
+            <div class="player-avatar">👤</div>
+            <input id="inputName" class="player-input" maxlength="20" placeholder="Il tuo nome">
+          </div>
+          
+          <div class="difficulty-section">
+            <h3 class="section-title">🎯 Difficoltà</h3>
+            <div class="difficulty-grid">
+              <button class="difficulty-card" data-diff="easy">
+                <div class="diff-emoji">🙂</div>
+                <div class="diff-name">Facile</div>
+              </button>
+              
+              <button class="difficulty-card" data-diff="medium">
+                <div class="diff-emoji">😎</div>
+                <div class="diff-name">Medio</div>
+              </button>
+              
+              <button class="difficulty-card" data-diff="hard">
+                <div class="diff-emoji">🧠</div>
+                <div class="diff-name">Difficile</div>
+              </button>
+            </div>
+          </div>
+
+          <button id="btnStart" class="btn-primary btn-large">
+            <span>🚀 Inizia Quiz</span>
+          </button>
+
+          <div class="leaderboards-section">
+            <h3 class="section-title">🏆 Classifiche</h3>
+            <div class="leaderboards-tabs">
+              <button class="lb-tab active" data-tab="easy">Facile</button>
+              <button class="lb-tab" data-tab="medium">Medio</button>
+              <button class="lb-tab" data-tab="hard">Difficile</button>
+            </div>
+            
+            <div class="leaderboard-container">
+              <div class="leaderboard-content active" data-diff="easy">
+                <ol id="lb-easy" class="leaderboard-list">
+                  <li class="empty">Caricamento...</li>
+                </ol>
+              </div>
+              <div class="leaderboard-content" data-diff="medium">
+                <ol id="lb-medium" class="leaderboard-list">
+                  <li class="empty">Caricamento...</li>
+                </ol>
+              </div>
+              <div class="leaderboard-content" data-diff="hard">
+                <ol id="lb-hard" class="leaderboard-list">
+                  <li class="empty">Caricamento...</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GAME SCREEN -->
+    <section class="card" id="gameScreen" style="display:none;">
+      
+      <div class="game-header">
+        <div class="game-info">
+          <span class="info-item">👤 <span id="playerLabel"></span></span>
+          <span class="info-item">⚙️ <span id="diffLabel"></span></span>
+        </div>
+        <div class="score-display">
+          <span class="score-label">Punteggio</span>
+          <span class="score-value" id="scoreLabel">0</span>
+        </div>
+      </div>
+      
+      <div class="progress-container">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressBar"></div>
+        </div>
+        <div class="progress-text" id="progressText"></div>
+      </div>
+      
+      <div class="streak-indicator" id="streakIndicator" style="display:none;">
+        🔥 <span id="streakCount">0</span> Streak!
+      </div>
+
+      <div class="question-container">
+        <h2 class="question-text" id="questionText"></h2>
+      </div>
+
+      <div id="choices" class="choices-container"></div>
+      
+      <!-- Explanation Box -->
+      <div class="explanation-box" id="explanationBox" style="display:none;">
+        <div class="explanation-header">
+          <span class="explanation-icon">📚</span>
+          <h3>Impara di più</h3>
+        </div>
+        <div class="explanation-content" id="explanationContent"></div>
+        <div class="explanation-sources" id="explanationSources"></div>
+        <button id="btnContinueAfterExplanation" class="btn-primary" style="margin-top: 20px;">
+          Continua
+        </button>
+      </div>
+
+      <button id="btnGiveUp" class="btn-secondary">Abbandona</button>
+    </section>
+
+    <!-- GAME OVER -->
+    <section class="card" id="overScreen" style="display:none;">
+      <div class="game-over-content">
+        <div class="confetti-container" id="confettiContainer"></div>
+        
+        <div class="game-over-icon">🎉</div>
+        <h2 class="game-over-title">Quiz Completato!</h2>
+        
+        <div class="final-score-display">
+          <div class="final-score-label">Punteggio Finale</div>
+          <div class="final-score-value" id="finalScore">0</div>
+        </div>
+        
+        <div class="performance-stats">
+          <div class="perf-stat">
+            <div class="perf-icon">✅</div>
+            <div class="perf-value" id="correctAnswers">0</div>
+            <div class="perf-label">Corrette</div>
+          </div>
+          <div class="perf-stat">
+            <div class="perf-icon">🔥</div>
+            <div class="perf-value" id="maxStreak">0</div>
+            <div class="perf-label">Max Streak</div>
+          </div>
+        </div>
+        
+        <div class="game-over-actions">
+          <button id="btnReplay" class="btn-primary">🔄 Gioca Ancora</button>
+          <button id="btnBack" class="btn-secondary">Torna all'Inizio</button>
+          <button id="btnShare" class="btn-secondary">🔗 Condividi</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+  
+  <div class="toast-container" id="toastContainer"></div>
+  
+</body>
+</html>
